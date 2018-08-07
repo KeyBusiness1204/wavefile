@@ -80,7 +80,7 @@ describe('create 16-bit wave files from scratch', function() {
         assert.equal(wav.data.chunkSize, 8);
     });
     it('samples should be the same as the args', function() {
-        //assert.deepEqual(wav.data.samples, [0, 1, -32768, 32767]);
+        assert.deepEqual(wav.data.samples, [0, 1, -32768, 32767]);
     });
     it('bitDepth should be "16"', function() {
         assert.equal(wav.bitDepth, "16");
@@ -146,7 +146,7 @@ describe("create 16-bit wave files from scratch, write and " +
         assert.equal(wav.data.chunkSize, 8);
     });
     it('samples should be the same as the args', function() {
-        //assert.deepEqual(wav.data.samples, [0, 1, -32768, 32767]);
+        assert.deepEqual(wav.data.samples, [0, 1, -32768, 32767]);
     });
     it('bitDepth should be "16"', function() {
         assert.equal(wav.bitDepth, "16");
@@ -207,7 +207,7 @@ describe("16-bit RIFX reading", function() {
         assert.ok(wav.data.samples.length > 0);
     });
     it("samples in RIFX file should be the same", function() {
-        //assert.deepEqual(wav.data.samples, riffwav.data.samples);
+        assert.deepEqual(wav.data.samples, riffwav.data.samples);
     });
 });
 
@@ -269,7 +269,7 @@ describe("16-bit RIFX to RIFF", function() {
     });
     it("samples in RIFF-from-RIFX file should be the same as in the " +
         "RIFF file", function() {
-        //assert.deepEqual(wav.data.samples, rifxwav.data.samples);
+        assert.deepEqual(wav.data.samples, rifxwav.data.samples);
     });
 });
 
@@ -380,7 +380,7 @@ describe("16-bit RIFF to RIFX", function() {
     });
     it("samples in RIFF-to-RIFX file should be the same as in " +
         " the RIFF file", function() {
-        //assert.deepEqual(wav.data.samples, riffwav.data.samples);
+        assert.deepEqual(wav.data.samples, riffwav.data.samples);
     });
 });
 

@@ -2207,13 +2207,14 @@ class WaveFile {
    * @throws {Error} If the sample index is off range.
    */
   getSample(index) {
-    index = index * (this.dataType.bits / 8);
-    if (index + this.dataType.bits / 8 > this.data.samples.length) {
-      throw new Error('Range error');
-    }
-    return unpack$1(
-      this.data.samples.slice(index, index + this.dataType.bits / 8),
-      this.dataType);
+    return this.data.samples[index];
+    //index = index * (this.dataType.bits / 8);
+    //if (index + this.dataType.bits / 8 > this.data.samples.length) {
+    //  throw new Error('Range error');
+    //}
+    //return unpack(
+    //  this.data.samples.slice(index, index + this.dataType.bits / 8),
+    //  this.dataType);
   }
 
   /**
@@ -2223,11 +2224,12 @@ class WaveFile {
    * @throws {Error} If the sample index is off range.
    */
   setSample(index, sample) {
-    index = index * (this.dataType.bits / 8);
-    if (index + this.dataType.bits / 8 > this.data.samples.length) {
-      throw new Error('Range error');
-    }
-    packTo(sample, this.dataType, this.data.samples, index);
+    this.data.samples[index] = sample;
+    //index = index * (this.dataType.bits / 8);
+    //if (index + this.dataType.bits / 8 > this.data.samples.length) {
+    //  throw new Error('Range error');
+    //}
+    //packTo(sample, this.dataType, this.data.samples, index);
   }
 
   /**
@@ -2239,7 +2241,7 @@ class WaveFile {
    * @param {string} bitDepthCode The audio bit depth code.
    *    One of '4', '8', '8a', '8m', '16', '24', '32', '32f', '64'
    *    or any value between '8' and '32' (like '12').
-   * @param {!Array<number>|!Array<!Array<number>>|!ArrayBufferView} samples
+   * @param {!Array<number>|!Array<!Array<number>>|!Array<!ArrayBufferView>|!ArrayBufferView} samples
    *    The samples. Must be in the correct range according to the bit depth.
    * @param {?Object} options Optional. Used to force the container
    *    as RIFX with {'container': 'RIFX'}
@@ -2254,15 +2256,22 @@ class WaveFile {
     samples = this.interleave_(samples);
     this.updateDataType_();
     /** @type {number} */
+    
     let numBytes = this.dataType.bits / 8;
-    this.data.samples = new Uint8Array(samples.length * numBytes);
-    packArrayTo(samples, this.dataType, this.data.samples);
+    
+    //this.data.samples = new Uint8Array(samples.length * numBytes);
+    this.data.samples = new Float64Array(samples);
+    //packArrayTo(samples, this.dataType, this.data.samples);
+    
+
     this.clearHeader_();
     this.makeWavHeader(
       bitDepthCode, numChannels, sampleRate,
-      numBytes, this.data.samples.length, options);
+      //numBytes, this.data.samples.length, options);
+      numBytes, this.data.samples.length * numBytes, options);
     this.data.chunkId = 'data';
-    this.data.chunkSize = this.data.samples.length;
+    //this.data.chunkSize = this.data.samples.length;
+    this.data.chunkSize = this.data.samples.length * numBytes;
     this.validateWavHeader_();
   }
 
@@ -2277,8 +2286,7 @@ class WaveFile {
   fromBuffer(bytes, samples=true) {
     this.clearHeader_();
     this.readWavBuffer(bytes, samples);
-    this.bitDepthFromFmt_();
-    this.updateDataType_();
+    
   }
 
   /**
@@ -2339,7 +2347,8 @@ class WaveFile {
       this.fmt.numChannels,
       this.fmt.sampleRate,
       this.bitDepth,
-      unpackArray(this.data.samples, this.dataType));
+      //unpackArray(this.data.samples, this.dataType));
+      this.data.samples);
   }
 
   /**
@@ -2350,7 +2359,8 @@ class WaveFile {
       this.fmt.numChannels,
       this.fmt.sampleRate,
       this.bitDepth,
-      unpackArray(this.data.samples, this.dataType),
+      //unpackArray(this.data.samples, this.dataType),
+      this.data.samples,
       {container: 'RIFX'});
   }
 
@@ -2375,17 +2385,24 @@ class WaveFile {
     }
     this.assureUncompressed_();
     /** @type {number} */
-    let sampleCount = this.data.samples.length / (this.dataType.bits / 8);
-    /** @type {!Float64Array} */
-    let typedSamplesInput = new Float64Array(sampleCount);
+    //let sampleCount = this.data.samples.length / (this.dataType.bits / 8);
+    let sampleCount = this.data.samples.length;
     /** @type {!Float64Array} */
     let typedSamplesOutput = new Float64Array(sampleCount);
-    unpackArrayTo(this.data.samples, this.dataType, typedSamplesInput);
+    
+
+    //unpackArrayTo(this.data.samples, this.dataType, typedSamplesInput);
+    
+
     if (thisBitDepth == "32f" || thisBitDepth == "64") {
-      this.truncateSamples_(typedSamplesInput);
+      //this.truncateSamples_(typedSamplesInput);
+      this.truncateSamples_(this.data.samples);
     }
     bitDepth(
-      typedSamplesInput, thisBitDepth, toBitDepth, typedSamplesOutput);
+      //typedSamplesInput, thisBitDepth, toBitDepth, typedSamplesOutput);
+      this.data.samples, thisBitDepth, toBitDepth, typedSamplesOutput);
+    
+
     this.fromScratch(
       this.fmt.numChannels,
       this.fmt.sampleRate,
@@ -2409,13 +2426,15 @@ class WaveFile {
     } else {
       this.assure16Bit_();
       /** @type {!Int16Array} */
-      let output = new Int16Array(this.data.samples.length / 2);
-      unpackArrayTo(this.data.samples, this.dataType, output);
+      //let output = new Int16Array(this.data.samples.length / 2);
+      //let output = new Int16Array(this.data.samples.length / 2);
+      //unpackArrayTo(this.data.samples, this.dataType, output);
       this.fromScratch(
         this.fmt.numChannels,
         this.fmt.sampleRate,
         '4',
-        encode(output),
+        //imaadpcm.encode(output),
+        encode(this.data.samples),
         {container: this.correctContainer_()});
     }
   }
@@ -2444,13 +2463,14 @@ class WaveFile {
   toALaw() {
     this.assure16Bit_();
     /** @type {!Int16Array} */
-    let output = new Int16Array(this.data.samples.length / 2);
-    unpackArrayTo(this.data.samples, this.dataType, output);
+    //let output = new Int16Array(this.data.samples.length / 2);
+    //unpackArrayTo(this.data.samples, this.dataType, output);
     this.fromScratch(
       this.fmt.numChannels,
       this.fmt.sampleRate,
       '8a',
-      encode$1(output),
+      //alawmulaw.alaw.encode(output),
+      encode$1(this.data.samples),
       {container: this.correctContainer_()});
   }
 
@@ -2478,13 +2498,14 @@ class WaveFile {
   toMuLaw() {
     this.assure16Bit_();
     /** @type {!Int16Array} */
-    let output = new Int16Array(this.data.samples.length / 2);
-    unpackArrayTo(this.data.samples, this.dataType, output);
+    //let output = new Int16Array(this.data.samples.length / 2);
+    //unpackArrayTo(this.data.samples, this.dataType, output);
     this.fromScratch(
       this.fmt.numChannels,
       this.fmt.sampleRate,
       '8m',
-      encode$2(output),
+      //alawmulaw.mulaw.encode(output),
+      encode$2(this.data.samples),
       {container: this.correctContainer_()});
   }
 
@@ -2997,7 +3018,12 @@ class WaveFile {
   writeWavBuffer() {
     uInt16_.be = this.container === 'RIFX';
     uInt32_.be = uInt16_.be;
-    /** @type {!Array<!Array<number>>} */
+    /** @type {number} */
+    let numBytes = this.dataType.bits / 8;
+    let byteCount = this.data.samples.length * numBytes;
+    byteCount = byteCount % 2 ? byteCount + 1 : byteCount;
+    let packedSamples = new Uint8Array(byteCount);
+    packArrayTo(this.data.samples, this.dataType, packedSamples);
     let fileBody = [
       this.getJunkBytes_(),
       this.getDs64Bytes_(),
@@ -3005,8 +3031,8 @@ class WaveFile {
       this.getFmtBytes_(),
       this.getFactBytes_(),
       packString(this.data.chunkId),
-      pack$1(this.data.samples.length, uInt32_),
-      this.data.samples,
+      pack$1(this.data.samples.length * numBytes, uInt32_),
+      packedSamples,
       this.getCueBytes_(),
       this.getSmplBytes_(),
       this.getLISTBytes_()
@@ -3381,6 +3407,8 @@ class WaveFile {
     this.readDs64Chunk_(buffer);
     this.readFmtChunk_(buffer);
     this.readFactChunk_(buffer);
+    this.bitDepthFromFmt_();
+    this.updateDataType_();
     this.readBextChunk_(buffer);
     this.readCueChunk_(buffer);
     this.readSmplChunk_(buffer);
@@ -3669,7 +3697,13 @@ class WaveFile {
       this.data.chunkId = 'data';
       this.data.chunkSize = chunk.chunkSize;
       if (samples) {
-        this.data.samples = buffer.slice(
+        let numBytes = this.dataType.bits / 8;
+        let byteCount = chunk.chunkData.end - chunk.chunkData.start;
+        this.data.samples = new Float64Array(byteCount / numBytes);
+        unpackArrayTo(
+          buffer,
+          this.dataType,
+          this.data.samples,
           chunk.chunkData.start,
           chunk.chunkData.end);
       }

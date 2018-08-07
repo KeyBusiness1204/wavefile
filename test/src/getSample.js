@@ -20,9 +20,6 @@ describe('getSample(): 8-bit wave file from scratch', function() {
     it('sample at 1 should be 255', function() {
         assert.equal(wav.getSample(1), 255);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
 });
 
 describe('getSample(): 16-bit wave file from scratch', function() {
@@ -41,9 +38,6 @@ describe('getSample(): 16-bit wave file from scratch', function() {
     });
     it('sample at 3 should be 32767', function() {
         assert.equal(wav.getSample(3), 32767);
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
     });
 });
 
@@ -64,9 +58,6 @@ describe('getSample(): 24-bit wave file from scratch', function() {
     it('sample at 3 should be 8388607', function() {
         assert.equal(wav.getSample(3), 8388607);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
 });
 
 describe('getSample(): 32-bit wave file from scratch', function() {
@@ -86,9 +77,6 @@ describe('getSample(): 32-bit wave file from scratch', function() {
     it('sample at 3 should be 2147483647', function() {
         assert.equal(wav.getSample(3), 2147483647);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
 });
 
 describe('getSample(): 32-bit fp wave file from scratch', function() {
@@ -107,9 +95,6 @@ describe('getSample(): 32-bit fp wave file from scratch', function() {
     });
     it('sample at 3 should be -0.04029440', function() {
         assert.equal(wav.getSample(3).toFixed(8), -'0.04029440');
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
     });
 });
 
@@ -132,9 +117,6 @@ describe('getSample(): 64-bit wave file from scratch', function() {
     it('sample at 3 should be -0.04029440055111987', function() {
         assert.equal(wav.getSample(3), -0.04029440055111987);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
 });
 
 describe('getSample(): 8-bit RIFX wave file from scratch', function() {
@@ -154,8 +136,5 @@ describe('getSample(): 8-bit RIFX wave file from scratch', function() {
     });
     it('sample at 3 should be 32767', function() {
         assert.equal(wav.getSample(3), 32767);
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
     });
 });

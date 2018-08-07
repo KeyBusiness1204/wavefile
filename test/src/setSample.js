@@ -19,9 +19,6 @@ describe('setSample(): 8-bit wave file from scratch', function() {
     it('sample at 1 should be 2', function() {
         assert.equal(wav.getSample(1), 2);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.setSample(4, 0);}, Error);
-    });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
     });
@@ -36,9 +33,6 @@ describe('setSample(): 16-bit wave file from scratch', function() {
 
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), -32768);
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.setSample(4, 1);}, Error);
     });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
@@ -55,9 +49,6 @@ describe('setSample(): 24-bit wave file from scratch', function() {
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), -83886);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
     });
@@ -73,9 +64,6 @@ describe('setSample(): 32-bit wave file from scratch', function() {
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), -21474);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
     });
@@ -90,9 +78,6 @@ describe('setSample(): 32-bit fp wave file from scratch', function() {
 
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), 2);
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
     });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
@@ -111,9 +96,6 @@ describe('setSample(): 64-bit wave file from scratch', function() {
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), 2);
     });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
-    });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);
     });
@@ -129,9 +111,6 @@ describe('setSample(): 16-bit RIFX wave file from scratch', function() {
 
     it('sample at 0 should be 0', function() {
         assert.equal(wav.getSample(1), -32768);
-    });
-    it('sample at 4 should throw error', function() {
-        assert.throws(function() {wav.getSample(4);}, Error);
     });
     it('number of bytes in data.samples should be the same', function() {
         assert.equal(wav.data.samples.length, byteCount);

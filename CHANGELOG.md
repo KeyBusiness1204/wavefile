@@ -1,7 +1,9 @@
 # CHANGELOG
 
 ## version 9.0.0 (unreleased)
-- Fix: stop adding a extra sample when changing the bit depth
+- this.data.samples stores samples in a Float64Array; samples are kept readable and can be accessed with wav.data.samples[sampleIndex].
+- Fix: stop adding a extra sample when changing the bit depth.
+- Fix: Add padding byte if sample chunk byte count is not even.
 
 ## version 8.4.2 (2018-08-06)
 - Use ArrayBufferView to represent TypedArray in index.d.ts

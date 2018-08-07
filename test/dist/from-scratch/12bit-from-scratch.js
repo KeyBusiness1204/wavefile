@@ -82,15 +82,13 @@ describe('create 12-bit wave files from scratch', function() {
 
 describe('create 12-bit wav with samples from a existing 12-bit wav',
     function() {
-
     let sourcewav = new WaveFile(
         fs.readFileSync(path + "M1F1-int12WE-AFsp.wav"));
 
     let wav = new WaveFile();
     require = require("esm")(module);
     bd = require("byte-data");
-    // original file has samples over the 12-bit limit; bits are set to 16
-    wav.fromScratch(2, 8000, '12', bd.unpackArray(sourcewav.data.samples, {bits: 16, signed: true}));
+    wav.fromScratch(2, 8000, '12', sourcewav.data.samples);
     fs.writeFileSync(
         "././test/files/out/M1F1-int12WE-AFsp-recreated.wav", wav.toBuffer());
 
@@ -130,11 +128,11 @@ describe('create 12-bit wav with samples from a existing 12-bit wav',
     it('dataChunkId should be "data"', function() {
         assert.equal(wav.data.chunkId, "data");
     });
-    it('dataChunkSize should be samples.length * 2', function() {
-        assert.equal(wav.data.chunkSize, sourcewav.data.samples.length);
+    it('dataChunkSize should be samples.length', function() {
+        assert.equal(wav.data.chunkSize, sourcewav.data.chunkSize);
     });
     it('samples should be the same as the args', function() {
-        //assert.deepEqual(wav.data.samples, sourcewav.data.samples);
+        assert.deepEqual(wav.data.samples, sourcewav.data.samples);
     });
     it('cbSize should be 22', function() {
         assert.equal(wav.fmt.cbSize, 22);
